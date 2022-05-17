@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nghttp2tls
+  labels:
+    application: nghttp2tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: nghttp2tls
+  template:
+    metadata:
+      labels:
+        application: nghttp2tls
+    spec:
+      containers:
+      - name: nghttp2tls
+        image: docker.io/svagi/nghttp2
+        imagePullPolicy: IfNotPresent
+        command:
+        - "nghttpd"
+        - "-v"
+        - "-d"
+        - "/webroot/"
+        - "443"
+        - "/certs/tls.key"
+        - "/certs/tls.crt"
+        ports:
+        - containerPort: 443
+          name: nghttp2tls
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /webroot
+          name: index-html
+          readOnly: true
+        - mountPath: /certs
+          name: certs
+          readOnly: true
+      volumes:
+      - name: index-html
+        configMap:
+          name: index-html
+      - name: certs
+        secret:
+          secretName: skupper-tls-nghttp2tls

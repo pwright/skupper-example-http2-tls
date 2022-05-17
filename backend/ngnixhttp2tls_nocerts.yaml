@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nghttp2tls
+  labels:
+    application: nghttp2tls
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: nghttp2tls
+  template:
+    metadata:
+      labels:
+        application: nghttp2tls
+    spec:
+      containers:
+      - name: nghttp2tls
+        image: docker.io/svagi/nghttp2
+        command:
+        - "nghttpd"
+        - "--no-tls"
+        - "-v"
+        - "443"
+        - "-d"
+        - "/webroot/"
+        ports:
+        - containerPort: 443
+          name: nghttp2tls
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /webroot
+          name: index-html
+          readOnly: true
+      volumes:
+        - name: index-html
+          configMap:
+            name: index-html

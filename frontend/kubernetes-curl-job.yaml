@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: my-kubernetes-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: my-kubernetes-job
+        image: alpine:latest
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - >
+            apk update && apk add --no-cache curl bash && bash -c 
+            " echo \"Running cron loop\";
+              while true; 
+              do
+                exit_status=\$(curl -v https://nghttp2tls:443 --cacert /tmp/certs/skupper-service-client/ca.crt --cert-type PEM  --http2-prior-knowledge);
+                sleep 2;
+              done
+              "
+        volumeMounts:
+        - name: certs
+          mountPath: /tmp/certs/skupper-service-client
+      restartPolicy: OnFailure
+      volumes:
+      - name: certs
+        secret:
+          secretName: skupper-service-client
+  backoffLimit: 4
