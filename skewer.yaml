@@ -94,6 +94,7 @@ steps:
     commands:
       west:
         - run: kubectl logs jobs/my-kubernetes-job
+          apply: readme
           output: |
             < HTTP/2 200 
             < server: nghttpd nghttp2/1.12.0
@@ -105,6 +106,8 @@ steps:
             { [5 bytes data]
             100    71  100    71    0     0   3177      0 --:--:-- --:--:-- --:--:--  3227
             * Connection #0 to host nghttp2tls left intact
+        - run: kubectl get pods
+          apply: test
     postamble: |
       The status 200 indicates a successful run.
 summary: |
