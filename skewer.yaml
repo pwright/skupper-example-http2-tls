@@ -52,13 +52,13 @@ steps:
       Use YAML files to deploy the frontend service
       in `west` and the backend service in `east`.
     commands:
-      west:
+      east:
         - run: kubectl apply -f backend/index-html-config-map.yaml
         - run: kubectl apply -f backend/ngnixhttp2tls_nocerts.yaml
-          await: [deployment/ngnixhttp2tls]
-      east:
+          await: [deployment/nghttp2tls]
+      west:
         - run: kubectl apply -f frontend/kubernetes-curl-job.yaml
-          await: [deployment/hello-world-backend]
+          await: [jobs/my-kubernetes-job]
 
   - title: Expose the backend service
     preamble: |

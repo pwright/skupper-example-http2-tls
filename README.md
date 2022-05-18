@@ -222,7 +222,7 @@ in `west` and the backend service in `east`.
 Console for _west_:
 
 ~~~ shell
-kubectl apply -f backend/index-html-config-map.yaml;kubectl apply -f ngnixhttp2tls_nocerts.yaml
+kubectl apply -f backend/index-html-config-map.yaml; kubectl apply -f backend/ngnixhttp2tls_nocerts.yaml
 ~~~
 
 Console for _east_:
@@ -250,8 +250,7 @@ skupper expose deployment nghttp2tls --port 443 --protocol http2 --enable-tls
 Sample output:
 
 ~~~
-NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
-tbd
+deployment nghttp2tls exposed as nghttp2tls
 ~~~
 
 ## Step 9: Modify the backend service to use the certs from the site.
@@ -278,24 +277,30 @@ tbd
 
 ## Step 10: Test the application
 
-Look up the external URL and use `curl` to send a request.
+Check the output of the curl job.
 
 Console for _west_:
 
 ~~~ shell
-curl -f $(kubectl get service hello-world-frontend -o jsonpath='http://{.status.loadBalancer.ingress[0].ip}:8080/')
+kubectl logs jobs/my-kubernetes-job
 ~~~
 
 Sample output:
 
 ~~~
-I am the frontend.  The backend says 'Hello from hello-world-backend-869cd94f69-wh6zt (1)'.
+< HTTP/2 200 
+< server: nghttpd nghttp2/1.12.0
+< cache-control: max-age=3600
+< date: Tue, 17 May 2022 11:54:34 GMT
+< content-length: 71
+< last-modified: Tue, 17 May 2022 11:53:01 GMT
+< 
+{ [5 bytes data]
+100    71  100    71    0     0   3177      0 --:--:-- --:--:-- --:--:--  3227
+* Connection #0 to host nghttp2tls left intact
 ~~~
 
-**Note:** If the embedded `kubectl get` command fails to get the
-IP address, you can find it manually by running `kubectl get
-services` and looking up the external IP of the
-`hello-world-frontend` service.
+The status 200 indicates a successful run.
 
 ## Summary
 
@@ -315,4 +320,4 @@ sends a request to the backend, Skupper forwards the request to the
 namespace where the backend is running and routes the response back to
 the frontend.
 
-<img src="images/sequence.svg" width="640"/>
+This example shows how the HTTP2 service can use TLS to ensure all traffic is encrypted.
