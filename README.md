@@ -13,22 +13,19 @@ across cloud providers, data centers, and edge sites.
 
 #### Contents
 
-- [Skupper HTTP2 services using TLS](#skupper-http2-services-using-tls)
-      - [A minimal HTTP2 application deployed across Kubernetes clusters using Skupper and encrypted using TLS](#a-minimal-http2-application-deployed-across-kubernetes-clusters-using-skupper-and-encrypted-using-tls)
-      - [Contents](#contents)
-  - [Overview](#overview)
-  - [Prerequisites](#prerequisites)
-  - [Step 1: Configure separate console sessions](#step-1-configure-separate-console-sessions)
-  - [Step 2: Access your clusters](#step-2-access-your-clusters)
-  - [Step 3: Set up your namespaces](#step-3-set-up-your-namespaces)
-  - [Step 4: Install Skupper in your namespaces](#step-4-install-skupper-in-your-namespaces)
-  - [Step 5: Check the status of your namespaces](#step-5-check-the-status-of-your-namespaces)
-  - [Step 6: Link your namespaces](#step-6-link-your-namespaces)
-  - [Step 7: Deploy the frontend and backend services](#step-7-deploy-the-frontend-and-backend-services)
-  - [Step 8: Expose the backend service](#step-8-expose-the-backend-service)
-  - [Step 9: Modify the backend service to use the certs from the site.](#step-9-modify-the-backend-service-to-use-the-certs-from-the-site)
-  - [Step 10: Test the application](#step-10-test-the-application)
-  - [Summary](#summary)
+* [Overview](#overview)
+* [Prerequisites](#prerequisites)
+* [Step 1: Configure separate console sessions](#step-1-configure-separate-console-sessions)
+* [Step 2: Access your clusters](#step-2-access-your-clusters)
+* [Step 3: Set up your namespaces](#step-3-set-up-your-namespaces)
+* [Step 4: Install Skupper in your namespaces](#step-4-install-skupper-in-your-namespaces)
+* [Step 5: Check the status of your namespaces](#step-5-check-the-status-of-your-namespaces)
+* [Step 6: Link your namespaces](#step-6-link-your-namespaces)
+* [Step 7: Deploy the frontend and backend services](#step-7-deploy-the-frontend-and-backend-services)
+* [Step 8: Expose the backend service](#step-8-expose-the-backend-service)
+* [Step 9: Modify the backend service to use the certs from the site.](#step-9-modify-the-backend-service-to-use-the-certs-from-the-site)
+* [Step 10: Test the application](#step-10-test-the-application)
+* [Summary](#summary)
 
 ## Overview
 
@@ -117,13 +114,15 @@ set the current namespace for each session.
 Console for _west_:
 
 ~~~ shell
-kubectl create namespace west; kubectl config set-context --current --namespace west
+kubectl create namespace west
+kubectl config set-context --current --namespace west
 ~~~
 
 Console for _east_:
 
 ~~~ shell
-kubectl create namespace east; kubectl config set-context --current --namespace east
+kubectl create namespace east
+kubectl config set-context --current --namespace east
 ~~~
 
 ## Step 4: Install Skupper in your namespaces
@@ -219,13 +218,14 @@ succeeded.
 Use YAML files to deploy the frontend service
 in `west` and the backend service in `east`.
 
-Console for _west_:
+Console for _east_:
 
 ~~~ shell
-kubectl apply -f backend/index-html-config-map.yaml; kubectl apply -f backend/ngnixhttp2tls_nocerts.yaml
+kubectl apply -f backend/index-html-config-map.yaml
+kubectl apply -f backend/ngnixhttp2tls_nocerts.yaml
 ~~~
 
-Console for _east_:
+Console for _west_:
 
 ~~~ shell
 kubectl apply -f frontend/kubernetes-curl-job.yaml

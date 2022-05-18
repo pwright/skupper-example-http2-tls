@@ -106,7 +106,7 @@ steps:
             { [5 bytes data]
             100    71  100    71    0     0   3177      0 --:--:-- --:--:-- --:--:--  3227
             * Connection #0 to host nghttp2tls left intact
-        - run: kubectl get pods
+        - run: kubectl exec job/my-kubernetes-job -- curl -v https://nghttp2tls:443 --cacert /tmp/certs/skupper-service-client/ca.crt --cert-type PEM  --http2-prior-knowledge
           apply: test
     postamble: |
       The status 200 indicates a successful run.
